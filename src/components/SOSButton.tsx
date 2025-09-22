@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { ScrollArea } from './ui/scroll-area';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { 
@@ -15,7 +16,7 @@ import {
   CheckCircle,
   XCircle
 } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface EmergencyContact {
   id: string;
@@ -37,11 +38,49 @@ interface SOSButtonProps {
 
 export function SOSButton({ variant = 'fixed' }: SOSButtonProps) {
   const [isPressed, setIsPressed] = useState(false);
+
+  // Enhanced styles for the SOS button
+  const sosButtonStyles = `
+    rounded-full 
+    bg-red-500 
+    hover:bg-red-600 
+    text-white 
+    p-4
+    h-14
+    w-auto
+    min-w-[3.5rem]
+    flex 
+    items-center 
+    justify-center 
+    transition-all 
+    duration-300 
+    shadow-lg 
+    hover:shadow-red-400/50
+    ${isPressed ? 'scale-95' : 'scale-100 hover:scale-105'}
+    border-2 
+    border-white
+    font-semibold
+  `;
+  
+  // Enhanced button styles for better visibility
+  const sosButtonBaseStyles = "bg-red-500 hover:bg-red-600 text-white rounded-full p-4 flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-red-400/50";
   const [showModal, setShowModal] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<GeolocationPosition | null>(null);
   const [locationError, setLocationError] = useState<string>('');
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
+
+  // Render the main SOS button
+  const renderSOSButton = () => (
+    <Button
+      size="lg"
+      className={`${sosButtonBaseStyles} ${isPressed ? 'scale-95' : 'scale-100 hover:scale-105'}`}
+      onClick={handleSOSPress}
+    >
+      <AlertTriangle className="w-6 h-6 mr-2" />
+      SOS
+    </Button>
+  );
 
   const emergencyServices: EmergencyService[] = [
     { 
@@ -316,27 +355,48 @@ Please contact emergency services if you cannot reach me.`;
   return (
     <>
       {/* SOS Button */}
-      {variant === 'fixed' ? (
-        <div className="fixed bottom-6 right-4 z-50">
-          {buttonContent}
-          
-          {/* Enhanced ripple effects for fixed variant */}
-          {isPressed && (
-            <>
-              <div className="absolute inset-0 rounded-full border-4 border-red-400 animate-ping opacity-75"></div>
-              <div className="absolute inset-0 rounded-full border-2 border-red-300 animate-ping opacity-50" style={{ animationDelay: '0.2s' }}></div>
-              <div className="absolute inset-0 rounded-full border-1 border-red-200 animate-ping opacity-25" style={{ animationDelay: '0.4s' }}></div>
-            </>
-          )}
-          
-          {/* Subtle always-visible indicator for fixed variant */}
-          {!isPressed && (
-            <div className="absolute inset-0 rounded-full border-2 border-red-300/40 animate-pulse"></div>
-          )}
-        </div>
-      ) : (
-        buttonContent
-      )}
+      <Button
+        onClick={handleSOSPress}
+        className={`
+          relative
+          px-6
+          py-3
+          bg-red-600
+          hover:bg-red-700
+          text-white
+          rounded-full
+          shadow-lg
+          transition-all
+          duration-300
+          h-14
+          font-bold
+          flex
+          items-center
+          gap-2
+          border-none
+          ${isPressed ? 'scale-95' : 'hover:scale-105'}
+        `}
+        style={{
+          backgroundColor: '#dc2626',
+          color: 'white',
+          boxShadow: '0 4px 6px -1px rgba(220, 38, 38, 0.4), 0 2px 4px -1px rgba(220, 38, 38, 0.1)'
+        }}
+      >
+        <AlertTriangle className="w-6 h-6 text-white" />
+        <span className="text-lg text-white">SOS</span>
+
+        {/* Active status indicator */}
+        {isPressed && (
+          <>
+            <div className="absolute -top-1 -right-1">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+              <div className="w-3 h-3 bg-red-600 rounded-full absolute top-0"></div>
+            </div>
+            <div className="absolute inset-0 rounded-full border-4 border-red-400 animate-ping opacity-75"></div>
+            <div className="absolute inset-0 rounded-full border-2 border-red-300 animate-ping opacity-50" style={{ animationDelay: '0.2s' }}></div>
+          </>
+        )}
+      </Button>
 
       {/* Emergency Services Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>

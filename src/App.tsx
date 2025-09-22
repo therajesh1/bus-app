@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { LoginPage } from './components/LoginPage';
 import { PassengerDashboard } from './components/PassengerDashboard';
 import { DriverDashboard } from './components/DriverDashboard';
+import { VoiceAssistant } from './components/VoiceAssistant';
+import { SOSButton } from './components/SOSButton';
 import { Toaster } from './components/ui/sonner';
 
 type UserRole = 'passenger' | 'driver' | null;
@@ -60,6 +62,12 @@ export default function App() {
       ) : (
         <DriverDashboard onLogout={handleLogout} />
       )}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-4 md:flex-row md:gap-6">
+        <div className="flex flex-row gap-4 items-center justify-end">
+          <VoiceAssistant userRole={userRole} />
+          <SOSButton variant="fixed" />
+        </div>
+      </div>
       <Toaster />
     </>
   );

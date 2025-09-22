@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Volume2, VolumeX, Mic, Settings, Globe } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface VoiceAssistantProps {
   userRole: 'passenger' | 'driver';
@@ -28,6 +28,57 @@ export function VoiceAssistant({ userRole }: VoiceAssistantProps) {
   const [isEnabled, setIsEnabled] = useState(false);
   const [currentAnnouncement, setCurrentAnnouncement] = useState<string>('');
   const [volume, setVolume] = useState(0.8);
+
+  // Enhanced button styles for better visibility
+  // Function to render the voice assistant buttons
+  const renderButtons = () => (
+    <div className="flex items-center gap-3">
+      <Button
+        size="lg"
+        className={`
+          rounded-full 
+          ${isEnabled ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'} 
+          text-white 
+          p-4 
+          flex 
+          items-center 
+          justify-center 
+          transition-all 
+          duration-300 
+          shadow-lg 
+          hover:shadow-blue-400/50
+          scale-100 
+          hover:scale-105
+        `}
+        onClick={() => setIsEnabled(!isEnabled)}
+      >
+        <Mic className="w-6 h-6" />
+      </Button>
+
+      <Button
+        size="lg"
+        className={`
+          rounded-full 
+          bg-gray-700 
+          hover:bg-gray-800 
+          text-white 
+          p-4 
+          flex 
+          items-center 
+          justify-center 
+          transition-all 
+          duration-300 
+          shadow-lg 
+          hover:shadow-gray-400/50
+          scale-100 
+          hover:scale-105
+        `}
+        onClick={() => setShowSettings(true)}
+      >
+        <Settings className="w-6 h-6" />
+      </Button>
+    </div>
+  );
   const [selectedLanguage, setSelectedLanguage] = useState('en-IN');
   const [showSettings, setShowSettings] = useState(false);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -399,31 +450,67 @@ export function VoiceAssistant({ userRole }: VoiceAssistantProps) {
 
   return (
     <>
-      <div className="fixed bottom-20 left-4 z-40">
-        {/* Settings Button */}
-        <Button
-          onClick={() => setShowSettings(true)}
-          className="h-10 w-10 rounded-full shadow-lg mb-2 bg-slate-600 hover:bg-slate-700 border-2 border-white"
-          size="sm"
-        >
-          <Settings className="w-4 h-4 text-white" />
-        </Button>
-
+      <div className="flex items-center gap-3">
         {/* Main Voice Assistant Toggle */}
         <Button
+          size="lg"
           onClick={toggleVoiceAssistant}
-          className={`h-12 w-12 rounded-full shadow-lg transition-all duration-300 mb-2 ${
-            isEnabled 
-              ? 'bg-emerald-500 hover:bg-emerald-600' 
-              : 'bg-slate-400 hover:bg-slate-500'
-          } border-2 border-white`}
-          size="sm"
+          className={`
+            rounded-full 
+            flex 
+            items-center 
+            justify-center 
+            transition-all 
+            duration-300 
+            shadow-lg 
+            scale-100 
+            hover:scale-105
+            border-none
+            p-4 
+            h-14
+            w-14
+          `}
+          style={{
+            backgroundColor: isEnabled ? '#10b981' : '#4b5563',
+            color: 'white',
+            boxShadow: isEnabled 
+              ? '0 4px 6px -1px rgba(16, 185, 129, 0.4), 0 2px 4px -1px rgba(16, 185, 129, 0.1)'
+              : '0 4px 6px -1px rgba(75, 85, 99, 0.4), 0 2px 4px -1px rgba(75, 85, 99, 0.1)'
+          }}
         >
           {isEnabled ? (
-            <Volume2 className="w-5 h-5 text-white" />
+            <Volume2 className="w-6 h-6 text-white" />
           ) : (
-            <VolumeX className="w-5 h-5 text-white" />
+            <VolumeX className="w-6 h-6 text-white" />
           )}
+        </Button>
+
+        {/* Settings Button */}
+        <Button
+          size="lg"
+          onClick={() => setShowSettings(true)}
+          className={`
+            rounded-full 
+            flex 
+            items-center 
+            justify-center 
+            transition-all 
+            duration-300 
+            shadow-lg 
+            scale-100 
+            hover:scale-105
+            border-none
+            p-4
+            h-14
+            w-14
+          `}
+          style={{
+            backgroundColor: '#374151',
+            color: 'white',
+            boxShadow: '0 4px 6px -1px rgba(55, 65, 81, 0.4), 0 2px 4px -1px rgba(55, 65, 81, 0.1)'
+          }}
+        >
+          <Settings className="w-6 h-6 text-white" />
         </Button>
 
         {/* Current Announcement Display */}
