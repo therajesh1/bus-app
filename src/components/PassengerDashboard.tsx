@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ChatBot } from './ChatBot';
+import { SOSButton } from './SOSButton';
+import { VoiceAssistant } from './VoiceAssistant';
 
 interface PassengerDashboardProps {
   onLogout: () => void;
@@ -204,13 +206,13 @@ export function PassengerDashboard({ onLogout }: PassengerDashboardProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-teal-50">
       {/* Mobile Header */}
       <div className="bg-white shadow-sm border-b sticky top-0 z-10">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="bg-gradient-to-r from-emerald-600 to-blue-600 rounded-lg p-2">
+              <div className="bg-gradient-to-r from-cyan-600 to-teal-600 rounded-lg p-2">
                 <Bus className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -227,9 +229,18 @@ export function PassengerDashboard({ onLogout }: PassengerDashboardProps) {
                 </div>
               </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={onLogout}>
-              <LogOut className="w-4 h-4" />
-            </Button>
+            <div className="flex items-center space-x-2">
+              <SOSButton variant="header" />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={onLogout}
+                className="bg-white border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 hover:text-red-700"
+              >
+                <LogOut className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Logout</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -365,12 +376,12 @@ export function PassengerDashboard({ onLogout }: PassengerDashboardProps) {
                         <Button 
                           onClick={() => setDestinationAlarm(bus)}
                           disabled={alarmSet && selectedBus?.id === bus.id}
-                          className="w-full h-12 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-medium shadow-md"
+                          className="w-full h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-medium shadow-md"
                         >
                           <Bell className="w-5 h-5 mr-2" />
                           {alarmSet && selectedBus?.id === bus.id ? 'Alarm Set - 5min Alert' : 'Set Destination Alarm'}
                         </Button>
-                        <p className="text-xs text-muted-foreground text-center mt-1">
+                        <p className="text-xs text-slate-600 text-center mt-1">
                           Get notified 5 minutes before arrival
                         </p>
                       </div>
@@ -551,6 +562,9 @@ export function PassengerDashboard({ onLogout }: PassengerDashboardProps) {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Voice Assistant */}
+      <VoiceAssistant userRole="passenger" />
 
       {/* Multilingual Chatbot */}
       <ChatBot userRole="passenger" />
